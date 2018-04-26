@@ -1,0 +1,66 @@
+<html>
+    <head>
+          <!--Reference: client: https://stackoverflow.com/questions/38184140/posting-json-data-via-ajax-to-web-api
+        validation: https://stackoverflow.com/questions/31762447/force-user-to-fill-all-fields-before-enabling-form-submit--->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+<body>
+    <div style="text-align:center;border:1px solid red; align: left">
+        <form  method="POST">
+            <h1>Make a Transaction</h1>
+            <b> accNum:</b> <input type="number" name="accNum" id="accNum" required><br>
+            <b>type: </b><input type="text" name="type" id="type" required><br>
+            <b>amount: </b> <input type="number" name="amount" id="amount" required><br>
+            <b>receiver:</b> <input type="text" name="receiver" id="receiver"><br>
+            <input type="submit" value="Submit" id="transfer">
+        </form>
+    </div>
+<script>
+$('#transfer').click(function () {
+     var isValid = validate();
+    if (isValid) {
+                var accNum = $('#accNum').val();
+                var type = $('#type').val();
+                var amount = parseFloat($('#amount').val());
+                var receiver = $('#receiver').val();
+
+
+                var registerObj = {
+                    "accNum": accNum,
+                    "type": type,
+                    "amount": amount,
+                    "receiver": receiver
+
+                };
+                console.log("registerObj :", registerObj);
+                
+                $.ajax({       
+                    url: "http://localhost:8080/api/transaction/"+accNum+"/transfer?type="+type+"&amount="+amount+"&recieverAccount="+receiver+"",
+                    type: "POST",
+                    data: JSON.stringify(registerObj),
+                    headers: {"API_KEY":"VALID_KEY"},
+                    contentType: "application/json",
+                    success: function (data) {
+                        alert("Successful transaction!");
+                    },
+                    error: function (xhRequest, ErrorText, thrownError) {
+                        
+
+                        alert("error..");
+                    }
+                });
+            }
+            });
+            
+  function validate() {
+  var isValid = true;
+  $('input').each(function() {
+    if ($(this).val() === '')
+        isValid = false;
+  });
+  return isValid;
+}
+</script>
+            
+</body>
+</html>

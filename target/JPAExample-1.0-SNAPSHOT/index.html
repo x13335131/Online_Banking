@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--Reference: client: https://stackoverflow.com/questions/38184140/posting-json-data-via-ajax-to-web-api
+        validation: https://stackoverflow.com/questions/31762447/force-user-to-fill-all-fields-before-enabling-form-submit--->
+        
+        <title>Banking Application</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+    </head>
+    <body>
+        <div style="text-align:center;border:1px solid red; align: left">
+            <h1>Create a new Customer</h1>
+           <form action="localhost:8080/customers/create" method="POST">
+               <b>name: </b> <input type="text" name="name" id="name" required><br>
+               <b>address:</b> <input type="text" name="address" id="address" required><br>
+               <b>email: </b><input type="email" name="email" id="email" required><br>
+               <b> credentials:</b> <input type="number" min="4" maxlength="4" name="credentials" id="credentials" required><br>
+
+            <input type="submit" value="Submit" id="Register">
+            </form>
+        
+            <a href="account.html">Create an Account</a>
+        </div>
+<script>
+$('#Register').click(function () {
+     var isValid = validate();
+     if (isValid) {
+                var name = $('#name').val();
+                var address = $('#address').val();
+                var email = $('#email').val();
+                var credentials = $('#credentials').val();
+
+                var registerObj = {
+                    "name": name,
+                    "address": address,
+                    "email": email,
+                    "credentials": credentials
+
+                };
+                console.log("registerObj :", registerObj);
+
+                $.ajax({        
+                    
+                    url: "http://localhost:8080/api/customers/create",
+                    type: "POST",
+                    data: JSON.stringify(registerObj),
+                    headers: {"API_KEY":"VALID_KEY"},
+                    contentType: "application/json",
+                    success: function (data) {
+                        alert("Success");
+                    },
+                    error: function (xhRequest, ErrorText, thrownError) {
+                        alert("Failed,please try again");
+                    }
+                
+                });
+            }
+            });
+            
+    function validate() {
+  var isValid = true;
+  $('input').each(function() {
+    if ($(this).val() === '')
+        isValid = false;
+  });
+  return isValid;
+}
+            </script>
+    </body>
+</html>
+

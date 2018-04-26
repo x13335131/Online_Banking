@@ -1,0 +1,65 @@
+<html>
+    <head>
+          <!--Reference: client: https://stackoverflow.com/questions/38184140/posting-json-data-via-ajax-to-web-api
+        validation: https://stackoverflow.com/questions/31762447/force-user-to-fill-all-fields-before-enabling-form-submit--->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+<body>
+    <div style="text-align:center;border:1px solid red; align: left">
+        <form  method="POST" >
+            <h1>Creating an Account</h1>
+            <b>ID: </b><input type="text" name="id" id="id" required><br>
+            <b>Balance: </b><input type="text" name="accBalance" id="balance" required><br>
+            <b>SortCode:</b> <input type="text" name="sortcode" id="sortcode" required><br>
+           <input type="submit" value="Submit" id="registerAccount">
+        </form>
+
+            <a href="transaction.html">Make a transaction</a>
+    </div>
+<script>
+$('#registerAccount').click(function () {
+     var isValid = validate();
+    if (isValid) {
+               var id = ($('#id').val())
+                var balance = parseFloat($('#balance').val());
+                var sortcode = $('#sortcode').val();
+
+                var registerObj = {
+                    "sortcode": sortcode,
+                    "balance": balance,
+                    "id": id
+
+                };
+                console.log("registerObj :", registerObj);
+                $.ajax({        
+                    url: "http://localhost:8080/api/account/"+id+"/create?balance="+balance+"&sort_code="+sortcode+"",
+                    type: "POST",
+                    data: JSON.stringify(registerObj),
+                    headers: {"API_KEY":"VALID_KEY"},
+                    contentType: "application/json",
+                    success: function (data) {
+                        alert("Successfully created an account..");
+                    },
+                    error: function (xhRequest, ErrorText, thrownError) {
+                        
+
+                        alert("error.");
+                    }
+                });
+            }
+            });
+            
+  function validate() {
+  var isValid = true;
+  $('input').each(function() {
+    if ($(this).val() === '')
+        isValid = false;
+  });
+  return isValid;
+}
+            </script>
+            
+</body>
+</html>
+
+
